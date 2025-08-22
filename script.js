@@ -4,6 +4,65 @@ document.addEventListener('DOMContentLoaded', function() {
     const navMenu = document.querySelector('.nav-menu');
     const navLinks = document.querySelectorAll('.nav-link');
 
+    // Theme Toggle Functionality - Simplified Version
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    // Initialize theme based on localStorage or system preference
+    function initializeTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        } else if (prefersDarkScheme.matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    // Toggle theme function
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Theme successfully changed
+    }
+
+    // Initialize theme on page load
+    initializeTheme();
+    
+    // Expose toggle function globally for testing
+    window.testThemeToggle = toggleTheme;
+
+    // Simple, reliable event listener for theme toggle
+    document.addEventListener('click', function(e) {
+        if (e.target && (e.target.id === 'theme-toggle' || e.target.closest('#theme-toggle'))) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Simple click animation
+            const btn = e.target.closest('#theme-toggle') || e.target;
+            btn.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                btn.style.transform = '';
+            }, 150);
+            
+            toggleTheme();
+        }
+    });
+
+    // Listen for system theme changes
+    prefersDarkScheme.addEventListener('change', function(e) {
+        if (!localStorage.getItem('theme')) {
+            document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+        }
+    });
+
     // Toggle mobile menu
     hamburger.addEventListener('click', function() {
         hamburger.classList.toggle('active');
@@ -57,22 +116,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Navbar background opacity on scroll
+    // Simple navbar background on scroll
     const navbar = document.querySelector('.navbar');
+    
     window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-            navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-            navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+        // Keep navbar style simple - let CSS handle theme changes
+        if (window.scrollY > 44) {
+            navbar.classList.add('scrolled');
         } else {
-            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-            navbar.style.boxShadow = 'none';
+            navbar.classList.remove('scrolled');
         }
     });
 
-    // Animate elements on scroll
+    // Animate elements on scroll - Apple-style smooth animations
     const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: 0.15,
+        rootMargin: '0px 0px -80px 0px'
     };
 
     const observer = new IntersectionObserver(function(entries) {
@@ -91,8 +150,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     animateElements.forEach(el => {
         el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
         observer.observe(el);
     });
 
@@ -172,12 +231,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (i < originalText.length) {
                 subtitle.textContent += originalText.charAt(i);
                 i++;
-                setTimeout(typeWriter, 100);
+                setTimeout(typeWriter, 80);
             }
         }
         
         // Start typing effect after a short delay
-        setTimeout(typeWriter, 1000);
+        setTimeout(typeWriter, 800);
     }
 
     // Counter animation for stats
@@ -190,11 +249,18 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (numericValue && numericValue > 0) {
             let current = 0;
-            const increment = numericValue / 50; // Animate over 50 frames
+            const duration = 1200; // 1.2 seconds for a smooth Apple-like animation
+            const startTime = Date.now();
             
             function updateCounter() {
-                current += increment;
-                if (current < numericValue) {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Use easing function for smooth animation
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                current = numericValue * easeOutQuart;
+                
+                if (progress < 1) {
                     element.textContent = Math.floor(current) + suffix;
                     requestAnimationFrame(updateCounter);
                 } else {

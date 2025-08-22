@@ -7,6 +7,14 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Additional Apple-style font loading */
+        @supports (font: -apple-system-body) {
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -21,10 +29,16 @@
                 <a href="#skills" class="nav-link">Skills</a>
                 <a href="#contact" class="nav-link">Contact</a>
             </div>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+            <div class="nav-controls">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-sun theme-toggle-icon"></i>
+                    <i class="fas fa-moon theme-toggle-icon"></i>
+                </button>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
             </div>
         </div>
     </nav>
@@ -36,8 +50,8 @@
                 <h1 class="hero-title">Hi, I'm <span class="highlight">Abhinav Shukla</span></h1>
                 <p class="hero-subtitle">Software Development Engineer</p>
                 <p class="hero-description">
-                    Experienced in building scalable backend systems, optimizing performance, and developing full-stack applications. 
-                    Currently working at Jio-Fynd, serving millions of users daily.
+                    Building scalable systems that serve millions. <br>
+                    Crafting exceptional digital experiences with modern technology.
                 </p>
                 <div class="hero-buttons">
                     <a href="#contact" class="btn btn-primary">Get In Touch</a>
@@ -65,15 +79,12 @@
             <div class="about-content">
                 <div class="about-text">
                     <p>
-                        I'm a passionate Software Development Engineer with over 4+ years of experience in building 
-                        scalable backend systems and full-stack applications. Currently working at Jio-Fynd, I've 
-                        optimized systems serving over 5 million users daily and managed order processing for 
-                        platforms handling millions of transactions.
+                        A Software Development Engineer with 4+ years of experience creating systems that scale. 
+                        Currently at Jio-Fynd, optimizing platforms that serve over 5 million users daily.
                     </p>
                     <p>
-                        My expertise spans across Python, Java, JavaScript, and modern frameworks like FastAPI, 
-                        Node.js, and Vue.js. I'm particularly interested in performance optimization, system design, 
-                        and emerging technologies like Generative AI.
+                        Specializing in Python, Java, and JavaScript ecosystems. Passionate about performance 
+                        optimization, system architecture, and the future of AI-powered applications.
                     </p>
                 </div>
                 <div class="about-stats">
@@ -230,7 +241,7 @@
     <!-- Projects Section -->
     <section id="projects" class="projects">
         <div class="container">
-            <h2 class="section-title">Featured Projects</h2>
+            <h2 class="section-title">Projects</h2>
             <div class="projects-grid">
                 <div class="project-card">
                     <div class="project-header">
@@ -347,7 +358,7 @@
             <div class="contact-content">
                 <div class="contact-info">
                     <h3>Let's Connect</h3>
-                    <p>I'm always interested in discussing new opportunities, innovative projects, or just connecting with fellow developers.</p>
+                    <p>Ready to discuss your next project or explore new opportunities together.</p>
                     <!-- <div class="contact-item">
                         <i class="fas fa-phone"></i>
                         <span>+91-8375095401</span>
