@@ -63,17 +63,131 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Toggle mobile menu
+    // Mobile menu elements
+    const navOverlay = document.getElementById('nav-overlay');
+    
+    // Cool haptic feedback simulation
+    function triggerHaptic(intensity = 'medium') {
+        if (navigator.vibrate) {
+            const patterns = {
+                light: [10],
+                medium: [15, 10, 15],
+                strong: [25, 10, 25, 10, 25]
+            };
+            navigator.vibrate(patterns[intensity] || patterns.medium);
+        }
+    }
+    
+    // Cool menu opening sound effect (visual feedback)
+    function playMenuAnimation(isOpening) {
+        if (isOpening) {
+            // Add cool entrance effects
+            const links = navMenu.querySelectorAll('.nav-link');
+            links.forEach((link, index) => {
+                link.style.transform = 'translateY(30px) rotate(5deg)';
+                link.style.opacity = '0';
+                setTimeout(() => {
+                    link.style.transform = 'translateY(0) rotate(0deg)';
+                    link.style.opacity = '1';
+                }, 100 + (index * 50));
+            });
+        }
+    }
+    
+    // Enhanced mobile menu toggle
     hamburger.addEventListener('click', function() {
+        const isOpening = !navMenu.classList.contains('active');
+        
+        // Trigger haptic feedback
+        triggerHaptic(isOpening ? 'medium' : 'light');
+        
+        // Add cool scale animation to hamburger
+        this.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            this.style.transform = '';
+        }, 150);
+        
         hamburger.classList.toggle('active');
         navMenu.classList.toggle('active');
+        if (navOverlay) {
+            navOverlay.classList.toggle('active');
+        }
+        
+        // Play cool animation
+        if (isOpening) {
+            setTimeout(() => playMenuAnimation(true), 200);
+        }
+        
+        // Prevent body scroll when menu is open
+        document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
     });
 
-    // Close mobile menu when clicking on a nav link
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
+    // Close mobile menu when clicking overlay
+    if (navOverlay) {
+        navOverlay.addEventListener('click', function() {
             hamburger.classList.remove('active');
             navMenu.classList.remove('active');
+            navOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+
+    // Enhanced nav link interactions
+    navLinks.forEach((link, index) => {
+        // Cool click animation
+        link.addEventListener('click', function(e) {
+            // Trigger haptic feedback
+            triggerHaptic('light');
+            
+            // Cool ripple effect
+            const ripple = document.createElement('div');
+            ripple.style.cssText = `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.6);
+                transform: scale(0);
+                animation: ripple 0.6s linear;
+                pointer-events: none;
+                z-index: 1000;
+            `;
+            
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                if (ripple.parentNode) {
+                    ripple.parentNode.removeChild(ripple);
+                }
+            }, 600);
+            
+            // Close menu with cool exit animation
+            setTimeout(() => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                if (navOverlay) {
+                    navOverlay.classList.remove('active');
+                }
+                document.body.style.overflow = '';
+            }, 200);
+        });
+        
+        // Cool hover effects
+        link.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px) scale(1.05)';
+        });
+        
+        link.addEventListener('mouseleave', function() {
+            this.style.transform = '';
         });
     });
 
@@ -380,10 +494,15 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
+        const navOverlay = document.getElementById('nav-overlay');
         
         if (navMenu.classList.contains('active')) {
             hamburger.classList.remove('active');
             navMenu.classList.remove('active');
+            if (navOverlay) {
+                navOverlay.classList.remove('active');
+            }
+            document.body.style.overflow = '';
         }
     }
 });
